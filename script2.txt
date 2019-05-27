@@ -16,6 +16,21 @@ GO
 
 DECLARE @diahoy as date ='20190527'
 
-select P.firstname,P.lastname,E.BirthDate, year(@diahoy)-year(E.birthdate) as edad
+select P.firstname,P.lastname,E.BirthDate, year(@diahoy)-year(E.birthdate) as edad,DATENAME(month,E.birthdate)
 from Person.Person as P inner join HumanResources.Employee as E on
 P.BusinessEntityID=E.BusinessEntityID
+where year(@diahoy)-year(E.birthdate) in (58,59,60)
+
+DECLARE @diahoy2 as date ='20190527'
+
+select P.firstname,P.lastname,E.BirthDate, year(@diahoy2)-year(E.birthdate) as edad,DATENAME(month,E.birthdate)
+from Person.Person as P inner join HumanResources.Employee as E on
+P.BusinessEntityID=E.BusinessEntityID
+where (year(@diahoy2)-year(E.birthdate)>=58 and year(@diahoy2)-year(E.birthdate)<=60)
+
+--queda pendiente programar una función que devuelva el nombre del mes en español
+--usando una función y un switch
+
+SELECT ProductID, ListPrice, 
+IIF(ListPrice > 50, 'high', 'low') AS PricePoint
+FROM Production.Product;
