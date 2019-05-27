@@ -1,0 +1,21 @@
+use AdventureWorks2014
+go
+
+SELECT P.BusinessEntityID AS CLAVE,P.FirstName,P.LastName,
+P.FirstName + N' ' + P.LastName AS 'NOMBRE COMPLETO'
+FROM Person.Person AS P
+GO
+SELECT P.BusinessEntityID AS CLAVE,P.FirstName,P.LastName,
+CONCAT(P.FirstName, N' ' , P.LastName) AS 'NOMBRE COMPLETO'
+FROM Person.Person AS P WHERE P.LASTNAME='Sánchez'
+GO
+SELECT P.BusinessEntityID AS CLAVE,P.FirstName,P.LastName,
+CONCAT(P.FirstName, N' ' , P.LastName) AS 'NOMBRE COMPLETO'
+FROM Person.Person AS P WHERE P.FirstName like '[A-C]%'
+GO
+
+DECLARE @diahoy as date ='20190527'
+
+select P.firstname,P.lastname,E.BirthDate, year(@diahoy)-year(E.birthdate) as edad
+from Person.Person as P inner join HumanResources.Employee as E on
+P.BusinessEntityID=E.BusinessEntityID

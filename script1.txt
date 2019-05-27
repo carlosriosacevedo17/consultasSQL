@@ -1,0 +1,94 @@
+use AdventureWorks2014
+go
+
+select P.productid,P.name,count(D.productid) as veces
+from Production.Product as P inner join 
+sales.SalesOrderDetail as D on P.ProductID=D.ProductID
+group by P.productid,P.name
+order by veces desc
+go
+
+select count(productid) as productos from
+Production.Product
+go
+
+select P.productid,P.name,count(D.productid) as veces
+from Production.Product as P left join 
+sales.SalesOrderDetail as D on P.ProductID=D.ProductID
+group by P.productid,P.name
+order by veces desc
+go
+select P.productid,P.name,count(D.productid) as veces
+from sales.SalesOrderDetail as D right join 
+Production.Product as P 
+ on P.ProductID=D.ProductID
+group by P.productid,P.name
+order by veces desc
+
+select P.productid,P.name,count(D.productid) as veces
+from Production.Product as P left join 
+sales.SalesOrderDetail as D on P.ProductID=D.ProductID
+where D.ProductID is null
+group by P.productid,P.name
+order by veces desc
+go
+
+select P.productid,P.name,count(D.productid) as veces
+from Production.Product as P full join 
+sales.SalesOrderDetail as D on P.ProductID=D.ProductID
+group by P.productid,P.name
+order by veces desc
+go
+
+/*select P.productid,P.name
+from Production.Product as P cross join 
+sales.SalesOrderDetail as D
+go*/
+
+create table directivos(cargo nvarchar(20) not null,
+nombre nvarchar(50) not null,
+jefe nvarchar(20),
+primary key(cargo))
+go
+insert into directivos(cargo,nombre)
+values('director','Marcos González Flores')
+insert into directivos(cargo,nombre,jefe)
+values('Secretario Académico','Consuelo Molina García','director')
+go
+insert into directivos(cargo,nombre,jefe)
+values('Coordinadora LCC','Marcela Martínez','Secretario Académico')
+go
+insert into directivos(cargo,nombre,jefe)
+values('Coordinadora ICC','Carmen Santiago Díaz','Secretario Académico')
+go
+insert into directivos(cargo,nombre,jefe)
+values('Coordinadora ITI','Mario Anzures García','Secretario Académico')
+go
+select * from directivos
+
+select B.cargo,B.nombre,B.jefe from
+directivos as A inner join
+directivos as B
+on A.cargo=B.jefe
+where B.jefe='Secretario Académico'
+
+select nombre,cargo,jefe from  directivos
+where jefe is not null and jefe='Secretario Académico'
+
+USE AdventureWorks2014 ;  
+GO  
+SELECT DaysToManufacture, AVG(StandardCost) AS AverageCost   
+FROM Production.Product  
+GROUP BY DaysToManufacture;  
+
+SELECT 'AverageCost' AS Cost_Sorted_By_Production_Days,   
+[0] as dia1, [1] as dia2, [2] as dia3, [3] as dia4, [4] as dia5 
+FROM  
+(SELECT DaysToManufacture, StandardCost   
+    FROM Production.Product) AS SourceTable  
+PIVOT  
+(  
+AVG(StandardCost)  
+FOR DaysToManufacture IN ([0], [1], [2], [3], [4])  
+) AS PivotTable;  
+  
