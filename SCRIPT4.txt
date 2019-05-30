@@ -1,0 +1,67 @@
+CREATE VIEW HumanResources.EmployeeList
+AS
+SELECT BusinessEntityID, JobTitle, HireDate, VacationHours
+FROM HumanResources.Employee;
+
+SELECT * FROM HumanResources.EmployeeList
+
+CREATE FUNCTION Sales.fn_LineTotal (@SalesOrderID INT)
+RETURNS TABLE
+AS
+RETURN
+    SELECT SalesOrderID,
+    CAST((OrderQty * UnitPrice * (1 - SpecialOfferID))
+    AS DECIMAL(8, 2)) AS LineTotal
+    FROM    Sales.SalesOrderDetail
+    WHERE   SalesOrderID = @SalesOrderID ;
+
+use adventureworks2014
+go
+SELECT * FROM Sales.fn_LineTotal(43697);  
+
+
+select * from 
+
+
+CREATE FUNCTION Sales.ufn_SalesByStore (@storeid int)  
+RETURNS TABLE  
+AS  
+RETURN   
+(  
+    SELECT P.ProductID, P.Name, SUM(SD.LineTotal) AS 'Total'  
+    FROM Production.Product AS P   
+    JOIN Sales.SalesOrderDetail AS SD ON SD.ProductID = P.ProductID  
+    JOIN Sales.SalesOrderHeader AS SH ON SH.SalesOrderID = SD.SalesOrderID  
+    JOIN Sales.Customer AS C ON SH.CustomerID = C.CustomerID  
+    WHERE C.StoreID = @storeid  
+    GROUP BY P.ProductID, P.Name  
+);  
+GO 
+
+SELECT * FROM Sales.ufn_SalesByStore (602);  
+
+
+WITH CTE_year AS
+(
+SELECT YEAR(OrderDate) AS OrderYear, customerID
+FROM Sales.SalesOrderHeader
+)
+SELECT orderyear, COUNT(distinct CustomerID) AS CustCount
+FROM CTE_year
+GROUP BY OrderYear;
+
+WITH CTE_VENTAS AS
+(
+ SELECT YEAR(SOH.ORDERDATE) AS ORDERYEAR, SOD.LINETOTAL
+ FROM SALES.SalesOrderHeader AS SOH INNER JOIN
+ SALES.SalesOrderDetail AS SOD ON SOH.SalesOrderID=SOD.SalesOrderID
+)
+SELECT ORDERYEAR,SUM(LINETOTAL)  AS VENTAS 
+FROM CTE_VENTAS
+GROUP BY ORDERYEAR;
+
+
+
+
+
+
